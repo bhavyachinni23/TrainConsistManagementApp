@@ -193,6 +193,42 @@ public class TrainConsistManagementApp {
             System.out.println("Invalid Cargo Code format!");
         }
 // ---------------- UC11 END ----------------
+        // ---------------- UC12 START ----------------
+
+
+        class GoodsBogie {
+            String type;   // e.g., Cylindrical, Rectangular
+            String cargo;  // e.g., Petroleum, Coal
+
+            public GoodsBogie(String type, String cargo) {
+                this.type = type;
+                this.cargo = cargo;
+            }
+
+            @Override
+            public String toString() {
+                return type + " bogie carrying " + cargo;
+            }
+        }
+
+// Sample goods bogies
+        List<GoodsBogie> goodsBogies = new ArrayList<>();
+        goodsBogies.add(new GoodsBogie("Cylindrical", "Petroleum"));
+        goodsBogies.add(new GoodsBogie("Rectangular", "Coal"));
+        goodsBogies.add(new GoodsBogie("Cylindrical", "Petroleum"));
+        goodsBogies.add(new GoodsBogie("Open", "Grain"));
+
+// Safety compliance check
+        boolean isSafe = goodsBogies.stream()
+                .allMatch(b -> !b.type.equals("Cylindrical") || b.cargo.equals("Petroleum"));
+
+// Display result
+        System.out.println("\nGoods Bogie Safety Compliance:");
+        for (GoodsBogie b : goodsBogies) {
+            System.out.println(b);
+        }
+        System.out.println("Train safety compliant: " + isSafe);
+// ---------------- UC12 END ----------------
 
     }
 }
