@@ -8,6 +8,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Comparator;
 import java.util.stream.Collectors;
+import java.util.Scanner;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 public class TrainConsistManagementApp {
 
@@ -159,6 +162,37 @@ public class TrainConsistManagementApp {
 
         System.out.println("\nTotal Seating Capacity in Train: " + totalSeats + " seats");
 // ---------------- UC10 END ----------------
+        // ---------------- UC11 START ----------------
+
+        Scanner scanner = new Scanner(System.in);
+
+// Regex patterns
+        Pattern trainIdPattern = Pattern.compile("TRN-\\d{4}");
+        Pattern cargoCodePattern = Pattern.compile("PET-[A-Z]{2}");
+
+// User input
+        System.out.print("\nEnter Train ID (format TRN-1234): ");
+        String trainId = scanner.nextLine();
+
+        System.out.print("Enter Cargo Code (format PET-AB): ");
+        String cargoCode = scanner.nextLine();
+
+// Validation
+        Matcher trainMatcher = trainIdPattern.matcher(trainId);
+        Matcher cargoMatcher = cargoCodePattern.matcher(cargoCode);
+
+        if (trainMatcher.matches()) {
+            System.out.println("Train ID is valid.");
+        } else {
+            System.out.println("Invalid Train ID format!");
+        }
+
+        if (cargoMatcher.matches()) {
+            System.out.println("Cargo Code is valid.");
+        } else {
+            System.out.println("Invalid Cargo Code format!");
+        }
+// ---------------- UC11 END ----------------
 
     }
 }
