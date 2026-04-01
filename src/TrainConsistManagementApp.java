@@ -5,12 +5,23 @@ import java.util.regex.Matcher;
 
 public class TrainConsistManagementApp {
 
+    // ---------------- UC14: Custom Exception ----------------
+    static class InvalidCapacityException extends Exception {
+        public InvalidCapacityException(String message) {
+            super(message);
+        }
+    }
+
     // ---------------- UC7 / UC8 / UC9 / UC10 / UC13: Bogie Class ----------------
     static class Bogie {
         String name;
         int capacity;
 
-        public Bogie(String name, int capacity) {
+        // Updated constructor for UC14
+        public Bogie(String name, int capacity) throws InvalidCapacityException {
+            if (capacity <= 0) {
+                throw new InvalidCapacityException("Capacity must be greater than zero");
+            }
             this.name = name;
             this.capacity = capacity;
         }
@@ -76,30 +87,35 @@ public class TrainConsistManagementApp {
         System.out.println("\nBogie Capacities:");
         bogieCapacity.forEach((k, v) -> System.out.println(k + " → " + v + " seats"));
 
-        // ---------------- UC7: Sort passenger bogies ----------------
+        // ---------------- UC7–UC10: Passenger Bogies ----------------
         List<Bogie> passengerBogies = new ArrayList<>();
-        passengerBogies.add(new Bogie("Sleeper", 72));
-        passengerBogies.add(new Bogie("AC Chair", 54));
-        passengerBogies.add(new Bogie("First Class", 36));
+        try {
+            passengerBogies.add(new Bogie("Sleeper", 72));
+            passengerBogies.add(new Bogie("AC Chair", 54));
+            passengerBogies.add(new Bogie("First Class", 36));
+        } catch (InvalidCapacityException e) {
+            System.out.println("Error creating bogie: " + e.getMessage());
+        }
 
+        // Sort by capacity
         passengerBogies.sort(Comparator.comparingInt(b -> b.capacity));
         System.out.println("\nPassenger Bogies Sorted by Capacity:");
         passengerBogies.forEach(System.out::println);
 
-        // ---------------- UC8: Filter high capacity ----------------
+        // Filter high capacity (>60)
         List<Bogie> highCapacityBogies = passengerBogies.stream()
                 .filter(b -> b.capacity > 60)
                 .collect(Collectors.toList());
         System.out.println("\nPassenger Bogies with Capacity > 60:");
         highCapacityBogies.forEach(System.out::println);
 
-        // ---------------- UC9: Group by type ----------------
+        // Group by type
         Map<String, List<Bogie>> bogiesByType = passengerBogies.stream()
                 .collect(Collectors.groupingBy(b -> b.name));
         System.out.println("\nPassenger Bogies Grouped by Type:");
         bogiesByType.forEach((k, v) -> System.out.println(k + " → " + v));
 
-        // ---------------- UC10: Total seats ----------------
+        // Total seats
         int totalSeats = passengerBogies.stream()
                 .map(b -> b.capacity)
                 .reduce(0, Integer::sum);
@@ -133,12 +149,15 @@ public class TrainConsistManagementApp {
         System.out.println("Train safety compliant: " + isSafe);
 
         // ---------------- UC13: Performance Comparison ----------------
-        // Create 1,000 bogies with varying capacities
         List<Bogie> bogies = new ArrayList<>();
-        for (int i = 1; i <= 1000; i++) {
-            int cap = (i % 3 == 0) ? 36 : (i % 3 == 1) ? 54 : 72;
-            String type = (i % 3 == 0) ? "First Class" : (i % 3 == 1) ? "AC Chair" : "Sleeper";
-            bogies.add(new Bogie(type, cap));
+        try {
+            for (int i = 1; i <= 1000; i++) {
+                int cap = (i % 3 == 0) ? 36 : (i % 3 == 1) ? 54 : 72;
+                String type = (i % 3 == 0) ? "First Class" : (i % 3 == 1) ? "AC Chair" : "Sleeper";
+                bogies.add(new Bogie(type, cap));
+            }
+        } catch (InvalidCapacityException e) {
+            System.out.println("Error creating bogie: " + e.getMessage());
         }
 
         // Loop-based filtering
@@ -159,6 +178,27 @@ public class TrainConsistManagementApp {
         long endStream = System.nanoTime();
         System.out.println("Stream-based filtering count: " + filteredStream.size());
         System.out.println("Stream execution time (ns): " + (endStream - startStream));
+
+        // ---------------- UC14: Test Invalid Bogie Creation ----------------
+        System.out.println("\n=== UC14: Invalid Bogie Creation Test ===");
+        try {
+            Bogie invalidBogie = new Bogie("Sleeper", -10);
+        } catch (InvalidCapacityException e) {
+            System.out.println("Caught Exception: " + e.getMessage());
+        }
+
+        try {
+            Bogie zeroBogie = new Bogie("AC Chair", 0);
+        } catch (InvalidCapacityException e) {
+            System.out.println("Caught Exception: " + e.getMessage());
+        }
+
+        try {
+            Bogie validBogie = new Bogie("First Class", 36);
+            System.out.println("Valid bogie created: " + validBogie);
+        } catch (InvalidCapacityException e) {
+            System.out.println("This should not happen!");
+        }
 
         scanner.close();
     }
