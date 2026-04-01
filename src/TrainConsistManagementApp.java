@@ -116,5 +116,22 @@ public class TrainConsistManagementApp {
         }
 
 // ---------------- UC6 END ----------------
+
+        class Bogie {
+            String name;
+            int capacity;
+
+            // Constructor
+            public Bogie(String name, int capacity) {
+                this.name = name;
+                this.capacity = capacity;
+            }
+
+            // To print bogie details
+            @Override
+            public String toString() {
+                return name + " (" + capacity + " seats)";
+            }
+        }
     }
 }
