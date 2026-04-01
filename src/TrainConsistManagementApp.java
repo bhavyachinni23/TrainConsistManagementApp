@@ -3,6 +3,7 @@ import java.util.List;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.LinkedList;
+import java.util.LinkedHashSet;
 
 public class TrainConsistManagementApp {
 
@@ -75,5 +76,25 @@ public class TrainConsistManagementApp {
         System.out.println(orderedTrain);
 
 // ---------------- UC4 END ----------------
+
+        // ---------------- UC5 START ----------------
+
+// Create LinkedHashSet for Train Formation
+        LinkedHashSet<String> formation = new LinkedHashSet<>();
+
+// Add bogies
+        formation.add("Engine");
+        formation.add("Sleeper");
+        formation.add("Cargo");
+        formation.add("Guard");
+
+// Add duplicate (will be ignored)
+        formation.add("Sleeper");
+
+// Display formation
+        System.out.println("\nTrain Formation (Insertion Order + Unique):");
+        System.out.println(formation);
+
+// ---------------- UC5 END ----------------
     }
 }
