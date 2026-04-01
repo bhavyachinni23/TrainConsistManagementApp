@@ -4,6 +4,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.LinkedList;
 import java.util.LinkedHashSet;
+import java.util.HashMap;
+import java.util.Map;
 
 public class TrainConsistManagementApp {
 
@@ -96,5 +98,23 @@ public class TrainConsistManagementApp {
         System.out.println(formation);
 
 // ---------------- UC5 END ----------------
+
+        // ---------------- UC6 START ----------------
+
+// Create HashMap for bogie capacities
+        HashMap<String, Integer> bogieCapacity = new HashMap<>();
+
+// Add bogie-capacity pairs
+        bogieCapacity.put("Sleeper", 72);
+        bogieCapacity.put("AC Chair", 54);
+        bogieCapacity.put("First Class", 36);
+
+// Display each bogie and its capacity
+        System.out.println("\nBogie Capacities:");
+        for (Map.Entry<String, Integer> entry : bogieCapacity.entrySet()) {
+            System.out.println(entry.getKey() + " → " + entry.getValue() + " seats");
+        }
+
+// ---------------- UC6 END ----------------
     }
 }
