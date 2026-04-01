@@ -151,6 +151,14 @@ public class TrainConsistManagementApp {
             System.out.println(entry.getKey() + " → " + entry.getValue());
         }
 // ---------------- UC9 END ----------------
+        // ---------------- UC10 START ----------------
+// Calculate total seats using Stream reduce
+        int totalSeats = passengerBogies.stream()
+                .map(b -> b.capacity)        // extract numeric capacity
+                .reduce(0, Integer::sum);   // sum all capacities
+
+        System.out.println("\nTotal Seating Capacity in Train: " + totalSeats + " seats");
+// ---------------- UC10 END ----------------
 
     }
 }
