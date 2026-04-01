@@ -1,234 +1,165 @@
-import java.util.ArrayList;
-import java.util.List;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.LinkedList;
-import java.util.LinkedHashSet;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Comparator;
+import java.util.*;
 import java.util.stream.Collectors;
-import java.util.Scanner;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
 public class TrainConsistManagementApp {
 
+    // ---------------- UC7 / UC8 / UC9 / UC10 / UC13: Bogie Class ----------------
+    static class Bogie {
+        String name;
+        int capacity;
+
+        public Bogie(String name, int capacity) {
+            this.name = name;
+            this.capacity = capacity;
+        }
+
+        @Override
+        public String toString() {
+            return name + " (" + capacity + " seats)";
+        }
+    }
+
+    // ---------------- UC12: GoodsBogie Class ----------------
+    static class GoodsBogie {
+        String type;   // Cylindrical, Rectangular, Open, etc.
+        String cargo;  // Petroleum, Coal, Grain, etc.
+
+        public GoodsBogie(String type, String cargo) {
+            this.type = type;
+            this.cargo = cargo;
+        }
+
+        @Override
+        public String toString() {
+            return type + " bogie carrying " + cargo;
+        }
+    }
+
     public static void main(String[] args) {
 
-        // Welcome Message
+        Scanner scanner = new Scanner(System.in);
+
         System.out.println("=== Train Consist Management App ===");
 
-        // ---------------- UC1 START ----------------
+        // ---------------- UC1: Initialize train consist ----------------
         List<String> trainConsist = new ArrayList<>();
-        System.out.println("Train consist initialized.");
-        System.out.println("Initial number of bogies: " + trainConsist.size());
-        // ---------------- UC1 END ----------------
+        System.out.println("Initial train consist size: " + trainConsist.size());
 
-        // ---------------- UC2 START ----------------
+        // ---------------- UC2: Add/remove bogies ----------------
         trainConsist.add("Sleeper");
         trainConsist.add("AC Chair");
         trainConsist.add("First Class");
-
-        System.out.println("\nPassenger bogies after addition:");
-        System.out.println(trainConsist);
-
+        System.out.println("\nPassenger bogies: " + trainConsist);
         trainConsist.remove("AC Chair");
-        System.out.println("\nAfter removing AC Chair:");
-        System.out.println(trainConsist);
+        System.out.println("After removing AC Chair: " + trainConsist);
 
-        System.out.println("\nIs Sleeper present? " + trainConsist.contains("Sleeper"));
+        // ---------------- UC3: Unique Bogie IDs ----------------
+        Set<String> bogieIds = new HashSet<>(Arrays.asList("BG101", "BG102", "BG103", "BG101"));
+        System.out.println("\nUnique Bogie IDs: " + bogieIds);
 
-        System.out.println("\nFinal Train Consist:");
-        System.out.println(trainConsist);
-        // ---------------- UC2 END ----------------
-
-        // ---------------- UC3 START ----------------
-        Set<String> bogieIds = new HashSet<>();
-        bogieIds.add("BG101");
-        bogieIds.add("BG102");
-        bogieIds.add("BG103");
-        bogieIds.add("BG101"); // duplicate ignored
-        bogieIds.add("BG102"); // duplicate ignored
-
-        System.out.println("\nUnique Bogie IDs:");
-        System.out.println(bogieIds);
-        // ---------------- UC3 END ----------------
-
-        // ---------------- UC4 START ----------------
-        LinkedList<String> orderedTrain = new LinkedList<>();
-        orderedTrain.add("Engine");
-        orderedTrain.add("Sleeper");
-        orderedTrain.add("AC");
-        orderedTrain.add("Cargo");
-        orderedTrain.add("Guard");
-
-        // Insert Pantry Car at position 2
+        // ---------------- UC4: Ordered LinkedList ----------------
+        LinkedList<String> orderedTrain = new LinkedList<>(Arrays.asList("Engine", "Sleeper", "AC", "Cargo", "Guard"));
         orderedTrain.add(2, "Pantry Car");
-        System.out.println("\nTrain Consist after adding Pantry Car:");
-        System.out.println(orderedTrain);
-
-        // Remove first and last bogie
+        System.out.println("\nTrain after adding Pantry Car: " + orderedTrain);
         orderedTrain.removeFirst();
         orderedTrain.removeLast();
-        System.out.println("\nFinal Ordered Train Consist:");
-        System.out.println(orderedTrain);
-        // ---------------- UC4 END ----------------
+        System.out.println("Final Ordered Train Consist: " + orderedTrain);
 
-        // ---------------- UC5 START ----------------
-        LinkedHashSet<String> formation = new LinkedHashSet<>();
-        formation.add("Engine");
-        formation.add("Sleeper");
-        formation.add("Cargo");
-        formation.add("Guard");
-        formation.add("Sleeper"); // duplicate ignored
+        // ---------------- UC5: LinkedHashSet for insertion order ----------------
+        LinkedHashSet<String> formation = new LinkedHashSet<>(Arrays.asList("Engine", "Sleeper", "Cargo", "Guard", "Sleeper"));
+        System.out.println("\nTrain Formation (unique + insertion order): " + formation);
 
-        System.out.println("\nTrain Formation (Insertion Order + Unique):");
-        System.out.println(formation);
-        // ---------------- UC5 END ----------------
-
-        // ---------------- UC6 START ----------------
-        HashMap<String, Integer> bogieCapacity = new HashMap<>();
-        bogieCapacity.put("Sleeper", 72);
-        bogieCapacity.put("AC Chair", 54);
-        bogieCapacity.put("First Class", 36);
-
+        // ---------------- UC6: Bogie capacities ----------------
+        Map<String, Integer> bogieCapacity = Map.of("Sleeper", 72, "AC Chair", 54, "First Class", 36);
         System.out.println("\nBogie Capacities:");
-        for (Map.Entry<String, Integer> entry : bogieCapacity.entrySet()) {
-            System.out.println(entry.getKey() + " → " + entry.getValue() + " seats");
-        }
-        // ---------------- UC6 END ----------------
+        bogieCapacity.forEach((k, v) -> System.out.println(k + " → " + v + " seats"));
 
-        // ---------------- UC7 START ----------------
-        // Bogie class
-        class Bogie {
-            String name;
-            int capacity;
-
-            public Bogie(String name, int capacity) {
-                this.name = name;
-                this.capacity = capacity;
-            }
-
-            @Override
-            public String toString() {
-                return name + " (" + capacity + " seats)";
-            }
-        }
-
-        // Create list of passenger bogies
+        // ---------------- UC7: Sort passenger bogies ----------------
         List<Bogie> passengerBogies = new ArrayList<>();
         passengerBogies.add(new Bogie("Sleeper", 72));
         passengerBogies.add(new Bogie("AC Chair", 54));
         passengerBogies.add(new Bogie("First Class", 36));
 
-        // Sort by capacity (ascending)
         passengerBogies.sort(Comparator.comparingInt(b -> b.capacity));
-
         System.out.println("\nPassenger Bogies Sorted by Capacity:");
-        for (Bogie b : passengerBogies) {
-            System.out.println(b);
-        }
-        // ---------------- UC7 END ----------------
+        passengerBogies.forEach(System.out::println);
 
-        // ---------------- UC8 START ----------------
-        // Filter bogies with capacity > 60
+        // ---------------- UC8: Filter high capacity ----------------
         List<Bogie> highCapacityBogies = passengerBogies.stream()
                 .filter(b -> b.capacity > 60)
                 .collect(Collectors.toList());
-
         System.out.println("\nPassenger Bogies with Capacity > 60:");
-        for (Bogie b : highCapacityBogies) {
-            System.out.println(b);
-        }
-        // ---------------- UC8 END ----------------
-        // ---------------- UC9 START ----------------
+        highCapacityBogies.forEach(System.out::println);
 
-// Group bogies by type (name)
+        // ---------------- UC9: Group by type ----------------
         Map<String, List<Bogie>> bogiesByType = passengerBogies.stream()
                 .collect(Collectors.groupingBy(b -> b.name));
-
-// Display grouped bogies
         System.out.println("\nPassenger Bogies Grouped by Type:");
-        for (Map.Entry<String, List<Bogie>> entry : bogiesByType.entrySet()) {
-            System.out.println(entry.getKey() + " → " + entry.getValue());
-        }
-// ---------------- UC9 END ----------------
-        // ---------------- UC10 START ----------------
-// Calculate total seats using Stream reduce
+        bogiesByType.forEach((k, v) -> System.out.println(k + " → " + v));
+
+        // ---------------- UC10: Total seats ----------------
         int totalSeats = passengerBogies.stream()
-                .map(b -> b.capacity)        // extract numeric capacity
-                .reduce(0, Integer::sum);   // sum all capacities
-
+                .map(b -> b.capacity)
+                .reduce(0, Integer::sum);
         System.out.println("\nTotal Seating Capacity in Train: " + totalSeats + " seats");
-// ---------------- UC10 END ----------------
-        // ---------------- UC11 START ----------------
 
-        Scanner scanner = new Scanner(System.in);
-
-// Regex patterns
+        // ---------------- UC11: Regex validation ----------------
         Pattern trainIdPattern = Pattern.compile("TRN-\\d{4}");
         Pattern cargoCodePattern = Pattern.compile("PET-[A-Z]{2}");
 
-// User input
-        System.out.print("\nEnter Train ID (format TRN-1234): ");
+        System.out.print("\nEnter Train ID (TRN-1234): ");
         String trainId = scanner.nextLine();
-
-        System.out.print("Enter Cargo Code (format PET-AB): ");
+        System.out.print("Enter Cargo Code (PET-AB): ");
         String cargoCode = scanner.nextLine();
 
-// Validation
-        Matcher trainMatcher = trainIdPattern.matcher(trainId);
-        Matcher cargoMatcher = cargoCodePattern.matcher(cargoCode);
+        System.out.println(trainIdPattern.matcher(trainId).matches() ? "Train ID is valid." : "Invalid Train ID!");
+        System.out.println(cargoCodePattern.matcher(cargoCode).matches() ? "Cargo Code is valid." : "Invalid Cargo Code!");
 
-        if (trainMatcher.matches()) {
-            System.out.println("Train ID is valid.");
-        } else {
-            System.out.println("Invalid Train ID format!");
-        }
+        // ---------------- UC12: Goods safety check ----------------
+        List<GoodsBogie> goodsBogies = Arrays.asList(
+                new GoodsBogie("Cylindrical", "Petroleum"),
+                new GoodsBogie("Rectangular", "Coal"),
+                new GoodsBogie("Cylindrical", "Petroleum"),
+                new GoodsBogie("Open", "Grain")
+        );
 
-        if (cargoMatcher.matches()) {
-            System.out.println("Cargo Code is valid.");
-        } else {
-            System.out.println("Invalid Cargo Code format!");
-        }
-// ---------------- UC11 END ----------------
-        // ---------------- UC12 START ----------------
-
-
-        class GoodsBogie {
-            String type;   // e.g., Cylindrical, Rectangular
-            String cargo;  // e.g., Petroleum, Coal
-
-            public GoodsBogie(String type, String cargo) {
-                this.type = type;
-                this.cargo = cargo;
-            }
-
-            @Override
-            public String toString() {
-                return type + " bogie carrying " + cargo;
-            }
-        }
-
-// Sample goods bogies
-        List<GoodsBogie> goodsBogies = new ArrayList<>();
-        goodsBogies.add(new GoodsBogie("Cylindrical", "Petroleum"));
-        goodsBogies.add(new GoodsBogie("Rectangular", "Coal"));
-        goodsBogies.add(new GoodsBogie("Cylindrical", "Petroleum"));
-        goodsBogies.add(new GoodsBogie("Open", "Grain"));
-
-// Safety compliance check
         boolean isSafe = goodsBogies.stream()
                 .allMatch(b -> !b.type.equals("Cylindrical") || b.cargo.equals("Petroleum"));
 
-// Display result
         System.out.println("\nGoods Bogie Safety Compliance:");
-        for (GoodsBogie b : goodsBogies) {
-            System.out.println(b);
-        }
+        goodsBogies.forEach(System.out::println);
         System.out.println("Train safety compliant: " + isSafe);
-// ---------------- UC12 END ----------------
 
+        // ---------------- UC13: Performance Comparison ----------------
+        // Create 1,000 bogies with varying capacities
+        List<Bogie> bogies = new ArrayList<>();
+        for (int i = 1; i <= 1000; i++) {
+            int cap = (i % 3 == 0) ? 36 : (i % 3 == 1) ? 54 : 72;
+            String type = (i % 3 == 0) ? "First Class" : (i % 3 == 1) ? "AC Chair" : "Sleeper";
+            bogies.add(new Bogie(type, cap));
+        }
+
+        // Loop-based filtering
+        long startLoop = System.nanoTime();
+        List<Bogie> filteredLoop = new ArrayList<>();
+        for (Bogie b : bogies) {
+            if (b.capacity > 60) filteredLoop.add(b);
+        }
+        long endLoop = System.nanoTime();
+        System.out.println("\nLoop-based filtering count: " + filteredLoop.size());
+        System.out.println("Loop execution time (ns): " + (endLoop - startLoop));
+
+        // Stream-based filtering
+        long startStream = System.nanoTime();
+        List<Bogie> filteredStream = bogies.stream()
+                .filter(b -> b.capacity > 60)
+                .collect(Collectors.toList());
+        long endStream = System.nanoTime();
+        System.out.println("Stream-based filtering count: " + filteredStream.size());
+        System.out.println("Stream execution time (ns): " + (endStream - startStream));
+
+        scanner.close();
     }
 }
